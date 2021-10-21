@@ -12,7 +12,7 @@ public class LoginPage extends LoginPageElementMapper {
     }
 
     public void fillEmail(){
-        email.sendKeys("nodariesports@gmail.com");
+        email.sendKeys("aresetmarcelo@gmail.com");
     }
     public void fillPasswd(){
         passwd.sendKeys("12345");
