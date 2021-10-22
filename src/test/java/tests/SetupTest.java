@@ -1,7 +1,8 @@
 package tests;
 
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import pageObjects.*;
@@ -10,122 +11,15 @@ import utils.Utils;
 
 import static org.junit.Assert.*;
 
+@Feature("Testes site de ecommerce")
 public class SetupTest extends BaseTests {
 
-    @Test
-    public void testOpeningBrowserAndLoadingPage() {
-        assertTrue(Browser.getCurrentDriver().getCurrentUrl().contains(Utils.getBaseUrl()));
-        System.out.println("Abrimos o navegador e carregamos a url!");
-    }
-
-    @Test
-    public void testlogin() {
-        // Iniciar as páginas
-        HomePage home = new HomePage();
-        LoginPage login = new LoginPage();
-        MyAccountPage myAccount = new MyAccountPage();
-
-        home.clickBtnLogin();
-        System.out.println("Clicou em Sign In e direcionou para a página de login");
-        assertTrue(Browser.getCurrentDriver().getCurrentUrl()
-                .contains(Utils.getBaseUrl().concat("index.php?controller=authentication&back=my-account")));
-
-        login.fillEmail();
-        System.out.println("Preencheu o email");
-        login.fillPasswd();
-        System.out.println("Preencheu a senha");
-        login.clickBtnSubmitLogin();
-        System.out.println("Clicou em Sign In");
-        assertTrue(Browser.getCurrentDriver().getCurrentUrl()
-                .contains(Utils.getBaseUrl().concat("index.php?controller=my-account")));
-        System.out.println("Validou a URL de minha conta");
-        assertTrue(Browser.getCurrentDriver().findElement(By.className("page-heading")).getText().contains("MY ACCOUNT")); //My account maiúsculo,pois e case sensive
-        System.out.println("Validou Minha Conta no site");
-
-    }
-
-    @Test
-    public void testSearch() {
-
-        String quest = "DRESS";
-        String questResultQtd = "7";
-
-        //Iniciar as páginas
-        HomePage home = new HomePage();
-        SearchPage search = new SearchPage();
-
-        //Fazer a pesquisa
-        home.doSearch(quest);
-
-        //Validar a pesquisa
-        assertTrue(search.isSearchPage());
-        assertEquals(search.getTextLighter().replace("\"", ""), quest);
-        assertThat(search.getTextHeading_counter(), CoreMatchers.containsString(questResultQtd));
-    }
-
-    @Test
-    public void testAcessCategoryTShirts() {
-        //Iniciar as páginas
-        HomePage home = new HomePage();
-        CategoryPage category = new CategoryPage();
-
-        //Clicar na categoria T-SHIRTS
-        home.clickCategoryTShirts();
-        //Validar se ao clicar na categoria T-SHIRTS ocorre o direcionamento correto
-        assertTrue(category.isPageTshirts());
-
-    }
-
-    @Test
-    public void testAddProductToProductPage() {
-        //Acessar a categoria T-shirts
-        testAcessCategoryTShirts();
-
-        //Iniciar as páginas
-        CategoryPage category = new CategoryPage();
-        ProductPage pdp = new ProductPage();
-
-        //Salva nome do produto na categoria
-        String nameProductCategory = category.getProductNameCategory();
-
-        //Clicar em more e direcionar para a página do produto
-        category.clickProductAddToProductPage();
-
-        //Verificar se o produto está na página de detalhes do produto corretamente
-        assertTrue(pdp.getProductNamePDP().equals(nameProductCategory));
-
-    }
-
-    @Test
-    public void testAddProductToCartPage() {
-        //Acessa a página de produto
-        testAddProductToProductPage();
-        //Iniciar as páginas
-        ProductPage pdp = new ProductPage();
-        CartPage cart = new CartPage();
-
-
-        //Salvar o nome do produto na página de PDP
-        String nameProductPDP = pdp.getProductNamePDP();
-
-        //Clicar no botão de Adicionar ao carrinho
-        pdp.clickButtonAddToCart();
-
-        //Clicar no botão Proceed To Checkout da modal
-        pdp.clickButtonModalProceedToCheckout();
-
-        //Validação do nome do produto no carrinho
-        assertTrue(cart.getNameProductCart().equals(nameProductPDP));
-
-    }
-
     @Test // DESAFIO 1 - FLUXO DE CRIAR CONTA
+    @Story("Fluxo de Criar Conta")
     public void createAccount() {
 
         // Iniciar as páginas
         HomePage home = new HomePage();
-        LoginPage login = new LoginPage();
-        MyAccountPage myAccount = new MyAccountPage();
 
         // Clicou em Sign In
         home.clickBtnLogin();
@@ -135,7 +29,7 @@ public class SetupTest extends BaseTests {
 
         //Preencheu o email
         Browser.getCurrentDriver().findElement(By.id("email_create")).
-                sendKeys("ayesetmarcelo@gmail.com");
+                sendKeys("resetmarcelo5@gmail.com");
         System.out.println("Preencheu o email para cadastrar");
 
         //Clicou em criar conta
@@ -180,11 +74,11 @@ public class SetupTest extends BaseTests {
     }
 
     @Test // DESAFIO 2 - FLUXO DE COMPRA
+    @Story("Fluxo de Compra")
     public void buyTest() {
         // Iniciar as páginas
         HomePage home = new HomePage();
         LoginPage login = new LoginPage();
-        MyAccountPage myAccount = new MyAccountPage();
 
         home.clickBtnLogin();
         System.out.println("Clicou em Sign In e direcionou para a página de login");
@@ -239,7 +133,117 @@ public class SetupTest extends BaseTests {
         // Deslogar da conta
         Browser.getCurrentDriver().findElement(By.className("logout")).click();
         System.out.println("Você deslogou da conta");
+    }
 
+
+    // Testes abaixo são os realizados durante a aula.
+
+
+    @Test
+    @Story("Abrir o site")
+    public void testOpeningBrowserAndLoadingPage() {
+        assertTrue(Browser.getCurrentDriver().getCurrentUrl().contains(Utils.getBaseUrl()));
+        System.out.println("Abrimos o navegador e carregamos a url!");
+    }
+
+    @Test
+    @Story("Realizar o login")
+    public void testlogin() {
+        // Iniciar as páginas
+        HomePage home = new HomePage();
+        LoginPage login = new LoginPage();
+
+        home.clickBtnLogin();
+        System.out.println("Clicou em Sign In e direcionou para a página de login");
+        assertTrue(Browser.getCurrentDriver().getCurrentUrl()
+                .contains(Utils.getBaseUrl().concat("index.php?controller=authentication&back=my-account")));
+
+        login.fillEmail();
+        System.out.println("Preencheu o email");
+        login.fillPasswd();
+        System.out.println("Preencheu a senha");
+        login.clickBtnSubmitLogin();
+        System.out.println("Clicou em Sign In");
+        assertTrue(Browser.getCurrentDriver().getCurrentUrl()
+                .contains(Utils.getBaseUrl().concat("index.php?controller=my-account")));
+        System.out.println("Validou a URL de minha conta");
+        assertTrue(Browser.getCurrentDriver().findElement(By.className("page-heading")).getText().contains("MY ACCOUNT"));
+        System.out.println("Validou Minha Conta no site");
+    }
+
+    @Test
+    public void testSearch() {
+
+        String quest = "DRESS";
+        String questResultQtd = "7";
+
+        //Iniciar as páginas
+        HomePage home = new HomePage();
+        SearchPage search = new SearchPage();
+
+        //Fazer a pesquisa
+        home.doSearch(quest);
+
+        //Validar a pesquisa
+        assertTrue(search.isSearchPage());
+        assertEquals(search.getTextLighter().replace("\"", ""), quest);
+        assertThat(search.getTextHeading_counter(), CoreMatchers.containsString(questResultQtd));
+    }
+
+    @Test
+    @Story("Acessar Categoria")
+    public void testAcessCategoryTShirts() {
+        //Iniciar as páginas
+        HomePage home = new HomePage();
+        CategoryPage category = new CategoryPage();
+
+        //Clicar na categoria T-SHIRTS
+        home.clickCategoryTShirts();
+        //Validar se ao clicar na categoria T-SHIRTS ocorre o direcionamento correto
+        assertTrue(category.isPageTshirts());
+    }
+
+    @Test
+    @Story("Acessar página de produto")
+    public void testAddProductToProductPage() {
+        //Acessar a categoria T-shirts
+        testAcessCategoryTShirts();
+
+        //Iniciar as páginas
+        CategoryPage category = new CategoryPage();
+        ProductPage pdp = new ProductPage();
+
+        //Salva nome do produto na categoria
+        String nameProductCategory = category.getProductNameCategory();
+
+        //Clicar em more e direcionar para a página do produto
+        category.clickProductAddToProductPage();
+
+        //Verificar se o produto está na página de detalhes do produto corretamente
+        assertTrue(pdp.getProductNamePDP().equals(nameProductCategory));
+    }
+
+    @Test
+    @Story("Adicionar produto ao carrinho")
+    public void testAddProductToCartPage() {
+        //Acessa a página de produto
+        testAddProductToProductPage();
+        //Iniciar as páginas
+        ProductPage pdp = new ProductPage();
+        CartPage cart = new CartPage();
+
+
+        //Salvar o nome do produto na página de PDP
+        String nameProductPDP = pdp.getProductNamePDP();
+
+        //Clicar no botão de Adicionar ao carrinho
+        pdp.clickButtonAddToCart();
+
+        //Clicar no botão Proceed To Checkout da modal
+        pdp.clickButtonModalProceedToCheckout();
+
+        //Validação do nome do produto no carrinho
+        assertTrue(cart.getNameProductCart().equals(nameProductPDP));
     }
 
 }

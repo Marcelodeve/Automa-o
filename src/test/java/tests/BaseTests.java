@@ -12,8 +12,9 @@ public class BaseTests {
         Browser.LoadPage(Utils.getBaseUrl());
     }
 
-//    @After
-//    public void tearDown(){
-//        Browser.close();
-//    }
+    @After
+    public void tearDown(){
+        Browser.print();
+        Browser.close();
+    }
 }
